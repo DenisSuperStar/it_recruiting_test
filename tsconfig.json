@@ -1,0 +1,14 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "rootDir": "./",
+    "outDir": "./build",
+    "esModuleInterop": true,
+    "strict": true
+  },
+  "files": ["index.ts"],
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}
