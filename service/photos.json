@@ -1,12 +1,12 @@
 [
-    {
-        "id": 1,
-        "title": "",
-        "albumId": "",
-        "url": "",
-        "thumbnailUrl": "",
-        "owner": ""
-    },
-    {},
-    {}
+  {
+    "id": 1,
+    "title": "",
+    "albumId": "",
+    "url": "",
+    "thumbnailUrl": "",
+    "owner": ""
+  },
+  {},
+  {}
 ]
