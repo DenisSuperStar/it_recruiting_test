@@ -2,11 +2,8 @@ import express from "express";
 import UserController from "../../controllers/userController";
 
 const app = express();
-const userController = new UserController(
-  "register",
-  "Моментальная регистрация!"
-);
-const { renderAccessForm, userRegisterProcessing } = userController;
+const userController = new UserController();
+const { renderRegister, processRegister } = userController;
 
-app.get("/register", renderAccessForm);
-app.post("/register", userRegisterProcessing);
+app.get('/register', renderRegister);
+app.post('/register', processRegister);
