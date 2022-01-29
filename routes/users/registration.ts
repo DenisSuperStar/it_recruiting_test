@@ -1,8 +1,7 @@
 import AccessView from "../../controllers/access.interface";
-import UserAutorization from "../../controllers/userAutorizeController";
+import UserRegistration from "../../controllers/userRegisterController";
 
 const view: AccessView = { name: 'register', title: 'Моментальная регистрация!' };
-const userAutorize: UserAutorization = new UserAutorization(view.name, view.title);
-const { initializeRoutes } = userAutorize;
+const UserRegister: UserRegistration = new UserRegistration(view.name, view.title);
 
-initializeRoutes();
+export default UserRegister;
