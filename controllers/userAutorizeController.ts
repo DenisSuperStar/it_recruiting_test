@@ -14,7 +14,7 @@ class UserAutorization extends FoundUser {
     this.initializeRoutes();
   }
 
-  public initializeRoutes(): void {
+  private initializeRoutes(): void {
     this.app.get(this.path, this.accessByLogin);
     this.app.post(this.path, this.findUser);
   }

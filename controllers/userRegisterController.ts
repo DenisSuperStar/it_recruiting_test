@@ -14,7 +14,7 @@ class UserRegistration extends UserDb {
         this.initializeRoutes();
     }
 
-    public initializeRoutes(): void {
+    private initializeRoutes(): void {
         this.app.get(this.path, this.accessByRegister);
         this.app.post(this.path, this.saveUser);
     }
