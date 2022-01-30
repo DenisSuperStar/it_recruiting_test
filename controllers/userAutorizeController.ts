@@ -1,29 +1,31 @@
 import express from "express";
-import FoundUser from "../libs/foundUser";
+import initializedUser from "../libs/initializedUser";
+import ShowView from "../libs/showView";
 
-class UserAutorization extends FoundUser {
-  private readonly access: string = '';
-  private readonly title: string = '';
+class UserAutorizationController {
   private readonly path: string = '/login';
-  private readonly app = express();
+  private readonly name: string;
+  private readonly title: string;
+  private readonly app;
+  private renderView: ShowView;
+  private initUser: initializedUser;
 
-  constructor(view: string, viewTitle: string) {
-    super();
-    this.access = view;
+  constructor(viewName: string, viewTitle: string) {
+    this.app = express();
+    this.name = viewName;
     this.title = viewTitle;
-    this.initializeRoutes();
+    this.renderView = new ShowView(this.name, this.title);
+    this.initUser = new initializedUser();
+    this.initializedRoutes();
   }
 
-  private initializeRoutes(): void {
-    this.app.get(this.path, this.accessByLogin);
-    this.app.post(this.path, this.findUser);
-  }
+  private initializedRoutes(): void {
+    const { render } = this.renderView;
+    const { findUser } = this.initUser;
 
-  private accessByLogin(req: express.Request, res: express.Response) {
-    res.render(this.access, {
-      title: this.title
-    });
+    this.app.get(this.path, render);
+    this.app.post(this.path, findUser);
   }
 }
 
-export default UserAutorization;
+export default UserAutorizationController;

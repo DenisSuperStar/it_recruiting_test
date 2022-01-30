@@ -1,29 +1,31 @@
 import express from "express";
-import UserDb from "../libs/userDb";
+import SaveUserToDb from "../libs/saveUserToDb";
+import ShowView from "../libs/showView";
 
-class UserRegistration extends UserDb {
-    private readonly access: string = '';
-    private readonly title: string = '';
+class UserRegistrationController {
     private readonly path: string = '/register';
-    private readonly app = express();
+    private readonly name: string;
+    private readonly title: string;
+    private readonly app;
+    private userSave: SaveUserToDb;
+    private renderView: ShowView;
 
-    constructor(view: string, viewTitle: string) {
-        super();
-        this.access = view;
+    constructor(viewName: string, viewTitle: string) {
+        this.name = viewName;
         this.title = viewTitle;
+        this.app = express();
+        this.userSave = new SaveUserToDb();
+        this.renderView = new ShowView(this.name, this.title);
         this.initializeRoutes();
     }
 
-    private initializeRoutes(): void {
-        this.app.get(this.path, this.accessByRegister);
-        this.app.post(this.path, this.saveUser);
-    }
+    private initializeRoutes() {
+        const { render } = this.renderView;
+        const { saveUser } = this.userSave;
 
-    private accessByRegister(req: express.Request, res: express.Response) {
-        res.render(this.access, {
-            title: this.title
-        });
+        this.app.get(this.path, render);
+        this.app.post(this.path, saveUser);
     }
 }
 
-export default UserRegistration;
+export default UserRegistrationController;
