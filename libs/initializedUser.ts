@@ -2,12 +2,16 @@ import express from "express";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import UserValidation from "./userValidation";
 import User from "../models/users";
+import jsonwebtoken from "jsonwebtoken";
+import EmailValidation from "./emailValidation";
 
 class initializedUser {
   private readonly userValid: UserValidation;
+  private readonly validateEmail: EmailValidation;
 
   constructor() {
     this.userValid = new UserValidation();
+    this.validateEmail = new EmailValidation();
   }
 
   public async findUser(
@@ -19,28 +23,43 @@ class initializedUser {
 
     if (userValid(body)) {
       const { email } = body;
-      const emailRule: string =
-        "^([a-z0-9_-]+.)*[a-z0-9_-]+@[a-z0-9_-]+(.[a-z0-9_-]+)*.[a-z]{2,6}$";
-      const isEmail: boolean = email.match(emailRule);
+      const { validEmail } = this.validateEmail;
+      let user, token: string;
 
-      if (isEmail) {
-        const findByEmail: string = email;
+      if (validEmail(email)) {
+        user = await User.findOne({ email });
 
-        await User.findOne({ email: findByEmail }).then((res) => {
-          console.log(res);
-        });
+        if (user) {
+          token = jsonwebtoken.sign({ data: user.login }, "secret", {
+            expiresIn: "1h",
+          });
+          user.token = token;
+        } else {
+          res.json({
+            error: ReasonPhrases.UNAUTHORIZED,
+            statusCode: StatusCodes.UNAUTHORIZED,
+          });
+        }
       } else {
         const { login } = body;
-        const findByLogin: string = login;
+        user = await User.findOne({ login });
 
-        await User.findOne({ login: findByLogin }).then((res) => {
-          console.log(res);
-        });
+        if (user) {
+          token = jsonwebtoken.sign({ data: user.login }, "secret", {
+            expiresIn: "1h",
+          });
+          user.token = token;
+        } else {
+          res.json({
+            error: ReasonPhrases.UNAUTHORIZED,
+            statusCode: StatusCodes.UNAUTHORIZED,
+          });
+        }
       }
     } else {
       res.json({
-        error: ReasonPhrases.UNAUTHORIZED,
-        statusCode: StatusCodes.UNAUTHORIZED,
+        error: ReasonPhrases.BAD_REQUEST,
+        statusCode: StatusCodes.BAD_REQUEST,
       });
     }
   }
