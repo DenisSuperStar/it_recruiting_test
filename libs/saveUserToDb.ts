@@ -10,7 +10,10 @@ class SaveUserToDb {
     this.userValid = new UserValidation();
   }
 
-  public async saveUser(req: express.Request, res: express.Response): Promise<void> {
+  public async saveUser(
+    req: express.Request,
+    res: express.Response
+  ): Promise<void> {
     const { body } = req;
     const { userValid } = this.userValid;
 
@@ -18,17 +21,16 @@ class SaveUserToDb {
       const { login, password } = body;
       const user = new User({
         login: login,
-        password: password
+        password: password,
       });
 
-      await user.save()
-        .then(() => {
-          console.log('Пользователь сохранен в базу!');
-        });
+      await user.save().then(() => {
+        console.log("Пользователь сохранен в базу!");
+      });
     } else {
       res.json({
         error: ReasonPhrases.UNAUTHORIZED,
-        statusCode: StatusCodes.UNAUTHORIZED
+        statusCode: StatusCodes.UNAUTHORIZED,
       });
     }
   }

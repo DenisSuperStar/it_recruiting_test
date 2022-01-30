@@ -10,35 +10,37 @@ class initializedUser {
     this.userValid = new UserValidation();
   }
 
-  public async findUser(req: express.Request, res: express.Response): Promise<void> {
+  public async findUser(
+    req: express.Request,
+    res: express.Response
+  ): Promise<void> {
     const { body } = req;
     const { userValid } = this.userValid;
 
     if (userValid(body)) {
       const { email } = body;
-      const emailRule: string = "^([a-z0-9_-]+.)*[a-z0-9_-]+@[a-z0-9_-]+(.[a-z0-9_-]+)*.[a-z]{2,6}$";
+      const emailRule: string =
+        "^([a-z0-9_-]+.)*[a-z0-9_-]+@[a-z0-9_-]+(.[a-z0-9_-]+)*.[a-z]{2,6}$";
       const isEmail: boolean = email.match(emailRule);
 
       if (isEmail) {
         const findByEmail: string = email;
 
-        await User.findOne({ email: findByEmail })
-          .then((res) => {
-            console.log(res);
-          });
+        await User.findOne({ email: findByEmail }).then((res) => {
+          console.log(res);
+        });
       } else {
         const { login } = body;
         const findByLogin: string = login;
 
-        await User.findOne({ login: findByLogin })
-          .then(res => {
-            console.log(res);
-          });
+        await User.findOne({ login: findByLogin }).then((res) => {
+          console.log(res);
+        });
       }
     } else {
       res.json({
         error: ReasonPhrases.UNAUTHORIZED,
-        statusCode: StatusCodes.UNAUTHORIZED
+        statusCode: StatusCodes.UNAUTHORIZED,
       });
     }
   }
