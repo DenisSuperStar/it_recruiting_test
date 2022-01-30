@@ -8,11 +8,15 @@ const userSchema = new Schema<User>({
   },
   email: {
     type: String,
+    unique: true
   },
   password: {
     type: String,
     required: true,
   },
+  token: {
+    type: String
+  }
 });
 
 const User = model<User>("User", userSchema);
