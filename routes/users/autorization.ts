@@ -1,7 +1,7 @@
-import AccessView from "../../controllers/access.interface";
-import UserAutorization from "../../controllers/userAutorizeController";
+import View from "../../libs/view.interface";
+import UserAutorizationController from "../../controllers/userAutorizeController";
 
-const view: AccessView = { name: 'login', title: 'Войти в приложение' };
-const UserAutorize: UserAutorization = new UserAutorization(view.name, view.title);
+const view: View = { name: 'login', title: 'Войти в приложение.' }
+const UserAutorize: UserAutorizationController = new UserAutorizationController(view.name, view.title);
 
 export default UserAutorize;

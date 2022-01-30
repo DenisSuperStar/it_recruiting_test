@@ -1,6 +1,6 @@
 import express from "express";
 import "./routes/users/autorization";
-import  "./routes/users/registration";
+import "./routes/users/registration";
 
 const app = express();
 const PORT: number = 8000;

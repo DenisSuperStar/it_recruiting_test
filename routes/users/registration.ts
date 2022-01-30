@@ -1,7 +1,7 @@
-import AccessView from "../../libs/access.interface";
-import UserRegistration from "../../controllers/userRegisterController";
+import View from "../../libs/view.interface";
+import UserRegistrationController from "../../controllers/userRegisterController";
 
-const view: AccessView = { name: 'register', title: 'Моментальная регистрация!' };
-const UserRegister: UserRegistration = new UserRegistration(view.name, view.title);
+const view: View = { name: 'register', title: 'Моментальная регистрация!' }
+const UserRegister: UserRegistrationController = new UserRegistrationController(view.name, view.title);
 
 export default UserRegister;
