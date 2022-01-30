@@ -1,6 +1,6 @@
-interface View {
+interface IView {
     readonly name: string,
     readonly title: string
 }
 
-export default View;
+export default IView;
