@@ -1,21 +1,26 @@
 import express from "express";
 
 class ServerError {
-    private readonly error: string;
-    private readonly status: number;
+  private readonly name: string;
+  private readonly status: number;
 
-    constructor(errorName: string, statusCode: number) {
-        this.error = errorName;
-        this.status = statusCode;
-    }
+  constructor(error: string, code: number) {
+    this.name = error;
+    this.status = code;
+  }
 
-    public serverErrorHandling(req: express.Request, res: express.Response, next: express.NextFunction): void {
-        res.json({
-            error: this.error,
-            status: this.status
-        });
+  public serverErrorHandling(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): void {
+    res.json({
+      error: this.name,
+      statusCode: this.status,
+    });
 
-        next(this.error);
-    }
+    next(this.name);
+  }
 }
+
 export default ServerError;

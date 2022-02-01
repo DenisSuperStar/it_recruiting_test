@@ -1,25 +1,23 @@
 import express from "express";
-import initializedUser from "../libs/initializedUser";
+import InitializedUser from "../libs/initializedUser";
 import ShowView from "../libs/showView";
+import IView from "../libs/view.interface";
 
 class UserAutorizationController {
-  private readonly path: string = '/login';
-  private readonly name: string;
-  private readonly title: string;
+  private readonly path: string = "/login";
   private readonly app;
   private renderView: ShowView;
-  private initUser: initializedUser;
+  private initUser: InitializedUser;
+  private readonly autorize: IView;
 
-  constructor(viewName: string, viewTitle: string) {
+  constructor() {
     this.app = express();
-    this.name = viewName;
-    this.title = viewTitle;
-    this.renderView = new ShowView(this.name, this.title);
-    this.initUser = new initializedUser();
-    this.initializedRoutes();
+    this.autorize = { name: "login", title: "Войти в приложение." };
+    this.renderView = new ShowView(this.autorize.name, this.autorize.title);
+    this.initUser = new InitializedUser();
   }
 
-  private initializedRoutes(): void {
+  public initializedRoutes(): void {
     const { render } = this.renderView;
     const { findUser } = this.initUser;
 

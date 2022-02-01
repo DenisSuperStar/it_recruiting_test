@@ -1,7 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import { threadId } from "worker_threads";
+import { connect } from "mongoose";
 
 class Setting {
   private readonly app;
@@ -38,22 +37,25 @@ class Setting {
   }
 
   private initializeControllers(): void {
-    this.controllers.forEach(controller => {
+    this.controllers.forEach((controller) => {
       controller.initializedRoutes();
     });
   }
 
   private initializeActions(): void {
-    this.actions.forEach(action => {
+    this.actions.forEach((action) => {
       let { serverErrorHandling } = action;
 
       this.app.use(serverErrorHandling);
     });
   }
 
-  public launcApp(): void { // добавить коннект к MongoDb
-    this.app.listen(this.port, () => {
-      console.log(`Server is running at https://localhost:${this.port}`);
+  public launcApp(): void {
+    const DB_NAME = "strong_app";
+    connect(`mongodb://localhost:27017/${DB_NAME}`).then(() => {
+      this.app.listen(this.port, () => {
+        console.log(`Server is running at https://localhost:${this.port}`);
+      });
     });
   }
 }

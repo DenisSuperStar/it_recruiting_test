@@ -1,17 +1,32 @@
 import express from "express";
-import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import UserValidation from "./userValidation";
 import User from "../models/users";
-import jsonwebtoken from "jsonwebtoken";
 import EmailValidation from "./emailValidation";
+import ComparePasswords from "./comparePasswords";
+import GenerateAccessToken from "./generateAccessToken";
+import { StatusCodes, ReasonPhrases } from "http-status-codes";
+import IError from "./error.interface";
 
-class initializedUser {
+class InitializedUser {
   private readonly userValid: UserValidation;
   private readonly validateEmail: EmailValidation;
+  private equalPasswords: ComparePasswords | undefined;
+  private readonly accessToken: GenerateAccessToken;
+  private readonly unAutorize: IError;
+  private readonly badRequest: IError;
 
   constructor() {
     this.userValid = new UserValidation();
     this.validateEmail = new EmailValidation();
+    this.accessToken = new GenerateAccessToken();
+    this.unAutorize = {
+      name: ReasonPhrases.UNAUTHORIZED,
+      status: StatusCodes.UNAUTHORIZED,
+    };
+    this.badRequest = {
+      name: ReasonPhrases.BAD_REQUEST,
+      status: StatusCodes.BAD_REQUEST,
+    };
   }
 
   public async findUser(
@@ -22,23 +37,26 @@ class initializedUser {
     const { userValid } = this.userValid;
 
     if (userValid(body)) {
-      const { email } = body;
+      const { email, password } = body;
       const { validEmail } = this.validateEmail;
-      let user, token: string;
+      let user;
 
       if (validEmail(email)) {
         user = await User.findOne({ email });
 
         if (user) {
-          token = jsonwebtoken.sign({ data: user.login }, "secret", {
-            expiresIn: "1h",
-          });
-          
-          res.cookie('authToken', token);
+          this.equalPasswords = new ComparePasswords(
+            user,
+            password,
+            user.password
+          );
+          const { giveAuthToken } = this.equalPasswords;
+
+          giveAuthToken(req, res);
         } else {
           res.json({
-            error: ReasonPhrases.UNAUTHORIZED,
-            statusCode: StatusCodes.UNAUTHORIZED,
+            error: this.unAutorize.name,
+            statusCode: this.unAutorize.status,
           });
         }
       } else {
@@ -46,25 +64,28 @@ class initializedUser {
         user = await User.findOne({ login });
 
         if (user) {
-          token = jsonwebtoken.sign({ data: user.login }, "secret", {
-            expiresIn: "1h",
-          });
+          this.equalPasswords = new ComparePasswords(
+            user,
+            password,
+            user.password
+          );
+          const { giveAuthToken } = this.equalPasswords;
 
-          res.cookie('authToken', token);
+          giveAuthToken(req, res);
         } else {
           res.json({
-            error: ReasonPhrases.UNAUTHORIZED,
-            statusCode: StatusCodes.UNAUTHORIZED,
+            error: this.unAutorize.name,
+            statusCode: this.unAutorize.status,
           });
         }
       }
     } else {
       res.json({
-        error: ReasonPhrases.BAD_REQUEST,
-        statusCode: StatusCodes.BAD_REQUEST,
+        error: this.badRequest.name,
+        statusCode: this.badRequest.status,
       });
     }
   }
 }
 
-export default initializedUser;
+export default InitializedUser;

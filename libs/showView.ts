@@ -9,7 +9,7 @@ class ShowView {
     this.title = viewTitle;
   }
 
-  public render(req: express.Request, res: express.Response) {
+  public render(req: express.Request, res: express.Response): void {
     res.render(this.name, {
       title: this.title,
     });
