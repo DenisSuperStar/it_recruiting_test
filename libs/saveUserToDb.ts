@@ -40,7 +40,8 @@ class SaveUserToDb {
           const token = jsonwebtoken.sign({ data: user.login }, "secret", {
             expiresIn: "1h",
           });
-          user.token = token;
+          
+          res.cookie('authToken', token);
 
           await user.save().then(() => {
             res.json({
@@ -68,7 +69,8 @@ class SaveUserToDb {
           const token = jsonwebtoken.sign({ data: user.login }, "secret", {
             expiresIn: "1h",
           });
-          user.token = token;
+          
+          res.cookie('authToken', token);
 
           await user.save().then(() => {
             res.json({

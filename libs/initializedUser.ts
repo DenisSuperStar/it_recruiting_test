@@ -33,7 +33,8 @@ class initializedUser {
           token = jsonwebtoken.sign({ data: user.login }, "secret", {
             expiresIn: "1h",
           });
-          user.token = token;
+          
+          res.cookie('authToken', token);
         } else {
           res.json({
             error: ReasonPhrases.UNAUTHORIZED,
@@ -48,7 +49,8 @@ class initializedUser {
           token = jsonwebtoken.sign({ data: user.login }, "secret", {
             expiresIn: "1h",
           });
-          user.token = token;
+
+          res.cookie('authToken', token);
         } else {
           res.json({
             error: ReasonPhrases.UNAUTHORIZED,
