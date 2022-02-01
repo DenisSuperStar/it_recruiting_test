@@ -1,13 +1,11 @@
 import express from "express";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import "./routes/users/autorization";
-import "./routes/users/registration";
 
 class Setting {
   private readonly app;
   private readonly port: number;
-  public readonly engine: string = 'ejs';
+  public readonly engine: string = "ejs";
 
   constructor(launchPort: number) {
     this.port = launchPort;
@@ -26,11 +24,11 @@ class Setting {
   }
 
   private initializeViewDirectory(): void {
-    this.app.set('views', './views');
+    this.app.set("views", "./views");
   }
 
   private initializeEngine(): void {
-    this.app.set('view engine', this.engine);
+    this.app.set("view engine", this.engine);
   }
 
   private initializeErrorHandling(): void {
@@ -38,19 +36,28 @@ class Setting {
     this.app.use(this.errorHandleServerError);
   }
 
-  private errorHandleNotFound(req: express.Request, res: express.Response, next: express.NextFunction): void {
+  private errorHandleNotFound(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): void {
     res.json({
       error: ReasonPhrases.FORBIDDEN,
-      statusCode: StatusCodes.FORBIDDEN
+      statusCode: StatusCodes.FORBIDDEN,
     });
 
     next();
   }
 
-  private errorHandleServerError(err: express.ErrorRequestHandler, req: express.Request, res: express.Response, next: express.NextFunction): void {
+  private errorHandleServerError(
+    err: express.ErrorRequestHandler,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): void {
     res.json({
       error: ReasonPhrases.INTERNAL_SERVER_ERROR,
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
     });
 
     next(err);
