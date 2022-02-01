@@ -1,25 +1,66 @@
 import express from "express";
+import cookieParser from 'cookie-parser';
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import "./routes/users/autorization";
 import "./routes/users/registration";
 
-const app = express();
-const PORT: number = 8000;
+class Setting {
+  private readonly app;
+  private readonly port: number;
+  public readonly engine: string = 'ejs';
 
-app.set("views", "./views");
-app.set("View engine", "ejs");
+  constructor(launchPort: number) {
+    this.port = launchPort;
+    this.app = express();
+    this.initializeMiddleware();
+    this.initializeViewDirectory();
+    this.initializeEngine();
+    this.initializeErrorHandling();
+  }
 
-app.get("/", (req: express.Request, res: express.Response) => {
-  res.send("Express + type script server!");
-});
+  private initializeMiddleware(): void {
+    const { json, urlencoded } = express;
+    this.app.use(json());
+    this.app.use(urlencoded({ extended: false }));
+    this.app.use(cookieParser());
+  }
 
-app.get("/delete-photo", (req: any, res: any) => {
-  res.send("Hello from delete photos");
-});
+  private initializeViewDirectory(): void {
+    this.app.set('views', './views');
+  }
 
-app.post("/delete-photo", (req: any, res: any) => {
-  res.send("Hello from post delete photos");
-});
+  private initializeEngine(): void {
+    this.app.set('view engine', this.engine);
+  }
 
-app.listen(PORT, () => {
-  console.log(`Server is running at https://localhost:${PORT}`);
-});
+  private initializeErrorHandling(): void {
+    this.app.use(this.errorHandleNotFound);
+    this.app.use(this.errorHandleServerError);
+  }
+
+  private errorHandleNotFound(req: express.Request, res: express.Response, next: express.NextFunction): void {
+    res.json({
+      error: ReasonPhrases.FORBIDDEN,
+      statusCode: StatusCodes.FORBIDDEN
+    });
+
+    next();
+  }
+
+  private errorHandleServerError(err: express.ErrorRequestHandler, req: express.Request, res: express.Response, next: express.NextFunction): void {
+    res.json({
+      error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR
+    });
+
+    next(err);
+  }
+
+  public launcApp(): void {
+    this.app.listen(this.port, () => {
+      console.log(`Server is running at https://localhost:${this.port}`);
+    });
+  }
+}
+
+export default Setting;
