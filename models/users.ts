@@ -13,9 +13,6 @@ const userSchema = new Schema<User>({
   password: {
     type: String,
     required: true,
-  },
-  token: {
-    type: String
   }
 });
 
