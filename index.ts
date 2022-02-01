@@ -1,19 +1,25 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import { threadId } from "worker_threads";
 
 class Setting {
   private readonly app;
   private readonly port: number;
   public readonly engine: string = "ejs";
+  private readonly controllers: any[];
+  private readonly actions: any[];
 
-  constructor(launchPort: number) {
+  constructor(ctrls: any[], actions: any[], launchPort: number) {
     this.port = launchPort;
+    this.controllers = ctrls;
+    this.actions = actions;
     this.app = express();
     this.initializeMiddleware();
     this.initializeViewDirectory();
     this.initializeEngine();
-    this.initializeErrorHandling();
+    this.initializeControllers();
+    this.initializeActions();
   }
 
   private initializeMiddleware(): void {
@@ -31,39 +37,21 @@ class Setting {
     this.app.set("view engine", this.engine);
   }
 
-  private initializeErrorHandling(): void {
-    this.app.use(this.errorHandleNotFound);
-    this.app.use(this.errorHandleServerError);
-  }
-
-  private errorHandleNotFound(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ): void {
-    res.json({
-      error: ReasonPhrases.FORBIDDEN,
-      statusCode: StatusCodes.FORBIDDEN,
+  private initializeControllers(): void {
+    this.controllers.forEach(controller => {
+      controller.initializedRoutes();
     });
-
-    next();
   }
 
-  private errorHandleServerError(
-    err: express.ErrorRequestHandler,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ): void {
-    res.json({
-      error: ReasonPhrases.INTERNAL_SERVER_ERROR,
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+  private initializeActions(): void {
+    this.actions.forEach(action => {
+      let { serverErrorHandling } = action;
+
+      this.app.use(serverErrorHandling);
     });
-
-    next(err);
   }
 
-  public launcApp(): void {
+  public launcApp(): void { // добавить коннект к MongoDb
     this.app.listen(this.port, () => {
       console.log(`Server is running at https://localhost:${this.port}`);
     });
