@@ -1,7 +1,7 @@
 import express from "express";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import IView from "../libs/view.interface";
-import IError from "../libs/error.interface";
+import IView from "../interfaces/view.interface";
+import IError from "../interfaces/error.interface";
 import Photo from "../models/photos";
 
 class getPhotosController {

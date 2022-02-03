@@ -8,17 +8,17 @@ class CreateUser {
   private user: any;
   private readonly User: any;
   private readonly created: IError;
-  public encryptedPassword: string = '';
+  public encryptedPassword: string = "";
   private readonly accessToken: GenerateAccessToken;
   private authToken: string | undefined;
-  
-  constructor(body: any, UserModel: any, create: IError,) {
+
+  constructor(body: any, UserModel: any, create: IError) {
     this.body = body;
     this.user = new Object();
     this.User = UserModel;
     this.created = create;
     this.encryptePassword();
-    this.accessToken = new GenerateAccessToken(body);
+    this.accessToken = new GenerateAccessToken();
     this.createUser();
   }
 
@@ -31,7 +31,7 @@ class CreateUser {
     const { login, email } = this.body;
     const { generateToken } = this.accessToken;
 
-    this.authToken = generateToken();
+    this.authToken = generateToken(login);
     this.user = new this.User({
       login,
       email,

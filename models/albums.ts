@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import IAlbum from "../libs/album.interface";
+import IAlbum from "../interfaces/album.interface";
 
 const albumSchema = new Schema<IAlbum>({
   title: {

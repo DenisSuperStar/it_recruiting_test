@@ -1,7 +1,7 @@
 import express from "express";
 import axios from "axios";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import IError from "../libs/error.interface";
+import IError from "../interfaces/error.interface";
 import User from "../models/users";
 import Photo from "../models/photos";
 

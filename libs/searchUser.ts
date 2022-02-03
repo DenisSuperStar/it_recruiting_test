@@ -1,17 +1,21 @@
 import express from "express";
 import VerifyUser from "./verifyUser";
 import ComparePasswords from "./comparePasswords";
+import GenerateAccessToken from "./generateAccessToken";
 import IError from "../interfaces/error.interface";
 
 class SearchUser {
-  private verifyUser: VerifyUser;
-  private equalPasswords: ComparePasswords | undefined;
+  private readonly verifyUser: VerifyUser;
+  private readonly comparePassword: ComparePasswords;
+  private readonly createToken: GenerateAccessToken;
   private readonly User;
   private readonly badRequest: IError;
   private readonly unAutorize: IError;
 
   constructor(notAutorize: IError, badReq: IError, UserModel: any) {
     this.verifyUser = new VerifyUser();
+    this.comparePassword = new ComparePasswords();
+    this.createToken = new GenerateAccessToken();
     this.User = UserModel; // import User from "../models/users";
     this.badRequest = badReq; // { name: ReasonPhrases.BAD_REQUEST, status: StatusCodes.BAD_REQUEST }
     this.unAutorize = notAutorize; // { name: ReasonPhrases.UNAUTHORIZED, status: StatusCodes.UNAUTHORIZED }
@@ -25,22 +29,28 @@ class SearchUser {
     const { userValid } = this.verifyUser;
 
     if (userValid(body)) {
-      const { email, password } = body;
       const { emailValid } = this.verifyUser;
       let user;
 
       if (emailValid(body)) {
+        const { login, email, password } = body;
         user = await this.User.findOne({ email });
 
         if (user) {
-          this.equalPasswords = new ComparePasswords(
-            user,
-            password,
-            user.password
-          );
-          const { giveAuthToken } = this.equalPasswords;
+          const { compareHashes } = this.comparePassword;
+          const { generateToken } = this.createToken;
 
-          giveAuthToken(req, res);
+          if (compareHashes(password, user)) {
+            const authToken = generateToken(login);
+            user.token = authToken;
+
+            res.cookie("authLogin", login);
+          } else {
+            res.json({
+              error: this.unAutorize.name,
+              statusCode: this.unAutorize.status,
+            });
+          }
         } else {
           res.json({
             error: this.unAutorize.name,
@@ -48,18 +58,24 @@ class SearchUser {
           });
         }
       } else {
-        const { login } = body;
+        const { login, password } = body;
         user = await this.User.findOne({ login });
 
         if (user) {
-          this.equalPasswords = new ComparePasswords(
-            user,
-            password,
-            user.password
-          );
-          const { giveAuthToken } = this.equalPasswords;
+          const { compareHashes } = this.comparePassword;
+          const { generateToken } = this.createToken;
 
-          giveAuthToken(req, res);
+          if (compareHashes(password, user)) {
+            const authToken = generateToken(login);
+            user.token = authToken;
+
+            res.cookie("authLogin", login);
+          } else {
+            res.json({
+              error: this.unAutorize.name,
+              statusCode: this.unAutorize.status,
+            });
+          }
         } else {
           res.json({
             error: this.unAutorize.name,

@@ -6,7 +6,7 @@ import IError from "../interfaces/error.interface";
 import { StatusCodes, ReasonPhrases } from "http-status-codes";
 
 class WriteUserToDb {
-  private readonly verifyUser: VerifyUser
+  private readonly verifyUser: VerifyUser;
   private createUser: CreateUser | undefined;
   private readonly badRequest: IError;
   private readonly conflict: IError;
@@ -23,10 +23,13 @@ class WriteUserToDb {
   ): Promise<void> {
     const { body } = req;
     const { userValid } = this.verifyUser;
-    const created = { name: ReasonPhrases.CREATED, status: StatusCodes.CREATED }
+    const created = {
+      name: ReasonPhrases.CREATED,
+      status: StatusCodes.CREATED,
+    };
 
     if (userValid(body)) {
-      const { emailValid } = this.verifyUser
+      const { emailValid } = this.verifyUser;
       let oldUser;
 
       if (emailValid(body)) {

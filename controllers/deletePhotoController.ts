@@ -1,6 +1,6 @@
 import express from "express";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import IError from "../libs/error.interface";
+import IError from "../interfaces/error.interface";
 import Photo from "../models/photos";
 
 class DeletePhotoController {

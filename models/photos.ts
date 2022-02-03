@@ -1,13 +1,17 @@
 import { Schema, model } from "mongoose";
-import Photo from "../libs/photo.interface";
+import IPhoto from "../interfaces/photo.interface";
 
-const photoSchema = new Schema<Photo>({
-  title: {
-    type: String,
-    required: true,
-  },
+const photoSchema = new Schema<IPhoto>({
   albumId: {
     type: Number,
+    required: true,
+  },
+  id: {
+    type: Number,
+    required: true,
+  },
+  title: {
+    type: String,
     required: true,
   },
   url: {
@@ -23,6 +27,6 @@ const photoSchema = new Schema<Photo>({
   },
 });
 
-const Photo = model<Photo>("Photo", photoSchema);
+const Photo = model<IPhoto>("Photo", photoSchema);
 
 export default Photo;
