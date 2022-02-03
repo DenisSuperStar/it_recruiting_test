@@ -45,9 +45,8 @@ class SaveUserToDb {
 
         if (!oldUser) {
           this.addUser = new AddNewUser(login, email, password);
-          const { handOverToken, addUser } = this.addUser;
+          const { addUser } = this.addUser;
 
-          handOverToken(req, res);
           addUser(req, res);
         } else {
           res.json({
@@ -60,9 +59,8 @@ class SaveUserToDb {
 
         if (!oldUser) {
           this.addUser = new AddNewUser(login, email, password);
-          const { handOverToken, addUser } = this.addUser;
+          const { addUser } = this.addUser;
 
-          handOverToken(req, res);
           addUser(req, res);
         } else {
           res.json({
