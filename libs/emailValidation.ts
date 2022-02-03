@@ -10,7 +10,7 @@ class EmailValidation {
   public validEmail(emailAddress: string): boolean {
     this.email = emailAddress;
 
-    return <boolean>(<unknown>this.email.match(this.emailRule));
+    return Boolean(this.email.match(this.emailRule));
   }
 }
 
