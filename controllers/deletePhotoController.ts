@@ -3,8 +3,8 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import IError from "../libs/error.interface";
 import Photo from "../models/photos";
 
-class DeleteAlbumIdController {
-  private readonly path: string = "/delete-album/:albumid";
+class DeletePhotoController {
+  private readonly path: string = "/delete-photo/:id";
   private readonly app;
   private readonly accepted: IError;
   private readonly unAutorize: IError;
@@ -22,21 +22,18 @@ class DeleteAlbumIdController {
   }
 
   public initializeRoutes(): void {
-    this.app.get(this.path, this.deleteAlbum);
+    this.app.get(this.path, this.deletePhoto);
   }
 
-  private async deleteAlbum(req: express.Request, res: express.Response): Promise<void> {
-    const { albumid } = req.params;
+  private async deletePhoto(req: express.Request, res: express.Response): Promise<void> {
+    const { id } = req.params;
     const { jwtToken } = req;
 
     if (jwtToken) {
-        const albumId = parseInt(albumid);
-        const albums = await Photo.find({ albumId });
-
-        await Photo.deleteMany(albums)
+        await Photo.findByIdAndRemove(id)
             .then(() => {
                 res.json({
-                    error: this.accepted.name,
+                    message: this.accepted.name,
                     statusCode: this.accepted.status
                 });
             });
@@ -49,4 +46,4 @@ class DeleteAlbumIdController {
   }
 }
 
-export default DeleteAlbumIdController;
+export default DeletePhotoController;

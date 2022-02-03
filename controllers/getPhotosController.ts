@@ -7,12 +7,12 @@ import Photo from "../models/photos";
 class getPhotosController {
   private readonly path: string = "/get-photos/:ownerid/:page/:maxcount";
   private readonly app;
-  private readonly view: IView;
+  private readonly photos: IView;
   private readonly unAutorize: IError;
 
   constructor() {
     this.app = express();
-    this.view = { name: "gallery", title: "Фотогалерея." };
+    this.photos = { name: "gallery", title: "Фотогалерея." };
     this.unAutorize = {
       name: ReasonPhrases.UNAUTHORIZED,
       status: StatusCodes.UNAUTHORIZED,
@@ -26,21 +26,35 @@ class getPhotosController {
   private async getPhotos(
     req: express.Request,
     res: express.Response
-  ): Promise<void> {
+  ): Promise<any> {
+    const { ownerid, page, maxcount } = req.params;
     const { jwtToken } = req;
 
     if (jwtToken) {
-      const { ownerid, page, maxcount } = req.params;
       const ownerId = parseInt(ownerid);
       const currentPage = parseInt(page);
       const maxCount = parseInt(maxcount);
+      let photos;
 
-      const photos = await Photo.find({ id: ownerId })
-        .limit(maxCount)
-        .skip(maxCount * currentPage);
+      if (!currentPage || !maxCount) {
+        return res.json({
+          error: ReasonPhrases.BAD_REQUEST,
+          statusCode: StatusCodes.BAD_REQUEST,
+        });
+      }
 
-      res.render(this.view.name, {
-        title: this.view.title,
+      if (ownerId) {
+        photos = await Photo.find({ id: ownerId })
+          .limit(maxCount)
+          .skip(maxCount * currentPage);
+      } else {
+        photos = await Photo.find({})
+          .limit(maxCount)
+          .skip(maxCount * currentPage);
+      }
+
+      res.render(this.photos.name, {
+        title: this.photos.title,
         photos,
       });
     } else {
