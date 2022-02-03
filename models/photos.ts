@@ -20,7 +20,6 @@ const photoSchema = new Schema<Photo>({
   },
   owner: {
     type: String,
-    required: true,
   },
 });
 
