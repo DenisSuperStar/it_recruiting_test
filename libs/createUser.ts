@@ -1,22 +1,22 @@
 import express from "express";
 import md5 from "md5";
-import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import GenerateAccessToken from "./generateAccessToken";
 import IError from "../interfaces/error.interface";
-import User from "../models/users";
 
 class CreateUser {
   private readonly body: any;
   private user: any;
+  private readonly User: any;
   private readonly created: IError;
   public encryptedPassword: string = '';
   private readonly accessToken: GenerateAccessToken;
   private authToken: string | undefined;
   
-  constructor(body: any) {
+  constructor(body: any, UserModel: any, create: IError,) {
     this.body = body;
     this.user = new Object();
-    this.created = { name: ReasonPhrases.CREATED, status: StatusCodes.CREATED };
+    this.User = UserModel;
+    this.created = create;
     this.encryptePassword();
     this.accessToken = new GenerateAccessToken(body);
     this.createUser();
@@ -32,7 +32,7 @@ class CreateUser {
     const { generateToken } = this.accessToken;
 
     this.authToken = generateToken();
-    this.user = new User({
+    this.user = new this.User({
       login,
       email,
       password: this.encryptePassword,
@@ -48,7 +48,7 @@ class CreateUser {
 
     await this.user.save().then(() => {
       res.json({
-        message: this.createUser.name,
+        message: this.created.name,
         statusCode: this.created.status,
       });
     });
