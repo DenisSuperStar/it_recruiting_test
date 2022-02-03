@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
-import Album from "../libs/album.interface";
+import IAlbum from "../libs/album.interface";
 
-const albumSchema = new Schema<Album>({
+const albumSchema = new Schema<IAlbum>({
   title: {
     type: String,
     required: true,
@@ -12,6 +12,6 @@ const albumSchema = new Schema<Album>({
   },
 });
 
-const Album = model<Album>("Album", albumSchema);
+const Album = model<IAlbum>("Album", albumSchema);
 
 export default Album;
