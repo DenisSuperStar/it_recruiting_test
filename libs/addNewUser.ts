@@ -53,7 +53,7 @@ class AddNewUser {
 
     await this.user.save().then(() => {
       res.json({
-        error: name,
+        message: name,
         statusCode: status,
       });
     });
