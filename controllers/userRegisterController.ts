@@ -1,29 +1,33 @@
 import express from "express";
-import SaveUserToDb from "../libs/saveUserToDb";
-import ShowView from "../libs/showView";
-import IView from "../libs/view.interface";
+import WriteUserToDb from "../libs/writeUserToDb";
+import IView from "../interfaces/view.interface";
 
 class UserRegistrationController {
   private readonly path: string = "/register";
   private readonly app;
-  private userSave: SaveUserToDb;
-  private renderView: ShowView;
-  private readonly register: IView;
+  public register: IView;
+  private writeUser: WriteUserToDb;
 
-  constructor() {
+  constructor(view: IView, addUser: WriteUserToDb) {
     this.app = express();
-    this.register = { name: "register", title: "Моментальная регистрация!" };
-    this.userSave = new SaveUserToDb();
-    this.renderView = new ShowView(this.register.name, this.register.title);
+    this.register = view; // {name: 'register', title: 'Моментальная регистрация!'}
+    this.writeUser = addUser; //const writeUser: WriteUserToDb = new WriteUserToDb();
     this.initializeRoutes();
   }
 
   public initializeRoutes(): void {
-    const { render } = this.renderView;
-    const { saveUser } = this.userSave;
+    const { name, title } = this.register;
+    const { writeUser } = this.writeUser;
 
-    this.app.get(this.path, render);
-    this.app.post(this.path, saveUser);
+    this.app.get(
+      this.path,
+      (req: express.Request, res: express.Response): void => {
+        res.render(name, {
+          title,
+        });
+      }
+    );
+    this.app.post(this.path, writeUser);
   }
 }
 
