@@ -1,13 +1,16 @@
 import { sign } from "jsonwebtoken";
 
 class GenerateAccessToken {
-  private authLogin: string = "";
+  private body: any;
 
-  public generateToken(userLogin: string): string {
-    this.authLogin = userLogin;
+  constructor(body: any) {
+    this.body = body;
+  }
 
-    const token: string = sign({ data: this.authLogin }, "secret", {
-      expiresIn: "1h",
+  public generateToken(): string {
+    const { login } = this.body;
+    const token: string = sign({ data: login }, 'secret', {
+      expiresIn: '1h'
     });
 
     return token;
