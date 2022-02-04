@@ -14,7 +14,6 @@ class CreateUser {
   private readonly created: IError;
   public encryptedPassword: string = "";
   private readonly accessToken: GenerateAccessToken;
-  private authToken: string | undefined;
 
   constructor(body: IRequestBody, UserModel: Model<IUser>, create: IError) {
     this.body = body;
@@ -32,20 +31,21 @@ class CreateUser {
 
   private createUser(): void {
     const { login, email } = this.body;
-    const { generateToken } = this.accessToken;
+    let now = new Date();
 
-    this.authToken = generateToken(login);
     this.user = new this.User({
       login,
       email,
       password: this.encryptePassword,
-      token: this.authToken,
+      registerDate: now 
     });
   }
 
   public saveUser(req: express.Request, res: express.Response): void {
     const { login } = this.body;
-
+    const { generateToken } = this.accessToken;
+    const authToken: string = generateToken(login);
+    
     this.user?.save().then(() => {
       res.json({
         message: this.created.name,
@@ -54,6 +54,7 @@ class CreateUser {
     });
 
     res.cookie("authLogin", login);
+    req.userAutorize = authToken;
   }
 }
 

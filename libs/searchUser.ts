@@ -43,7 +43,7 @@ class SearchUser {
 
           if (compareHashes(password, user)) {
             const authToken = generateToken(login);
-            user.token = authToken;
+            req.userAutorize = authToken;
 
             res.cookie("authLogin", login);
           } else {
@@ -68,7 +68,7 @@ class SearchUser {
 
           if (compareHashes(password, user)) {
             const authToken = generateToken(login);
-            user.token = authToken;
+            req.userAutorize = authToken;
 
             res.cookie("authLogin", login);
           } else {
