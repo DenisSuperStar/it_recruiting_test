@@ -1,15 +1,13 @@
 import express from "express";
 import { verify } from "jsonwebtoken";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
-import User from "../models/users";
 
-const accessTokenVerify = async (
+const accessTokenVerify = (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
-): Promise<any> => {
-  const { login } = req.cookies;
-  const userAutorize = await User.findOne({ login });
+): any => {
+  const { userAutorize } = req;
 
   if (!userAutorize) {
     return res.json({
@@ -18,8 +16,7 @@ const accessTokenVerify = async (
     });
   }
 
-  const { token } = userAutorize;
-  const jwtPayload = verify(token, "secret");
+  const jwtPayload = verify(userAutorize, "secret");
   req.jwtToken = String(jwtPayload);
 
   next();
