@@ -2,17 +2,18 @@ import express from "express";
 import VerifyUser from "./verifyUser";
 import ComparePasswords from "./comparePasswords";
 import GenerateAccessToken from "./generateAccessToken";
+import IUserModel from "../interfaces/userModel.interface";
 import IError from "../interfaces/error.interface";
 
 class SearchUser {
   private readonly verifyUser: VerifyUser;
   private readonly comparePassword: ComparePasswords;
   private readonly createToken: GenerateAccessToken;
-  private readonly User;
+  private readonly User: IUserModel;
   private readonly badRequest: IError;
   private readonly unAutorize: IError;
 
-  constructor(notAutorize: IError, badReq: IError, UserModel: any) {
+  constructor(notAutorize: IError, badReq: IError, UserModel: IUserModel) {
     this.verifyUser = new VerifyUser();
     this.comparePassword = new ComparePasswords();
     this.createToken = new GenerateAccessToken();

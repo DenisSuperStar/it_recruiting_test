@@ -1,20 +1,23 @@
+import { Model } from "mongoose";
 import express from "express";
 import md5 from "md5";
 import GenerateAccessToken from "./generateAccessToken";
+import IUserDocument from "../interfaces/userDocument.interface";
+import IRequestBody from "../interfaces/requestBody.interface";
 import IError from "../interfaces/error.interface";
+import IUser from "../interfaces/user.interface";
 
 class CreateUser {
-  private readonly body: any;
-  private user: any;
-  private readonly User: any;
+  private readonly body: IRequestBody;
+  private user: IUserDocument | undefined;
+  private readonly User: Model<IUser>;
   private readonly created: IError;
   public encryptedPassword: string = "";
   private readonly accessToken: GenerateAccessToken;
   private authToken: string | undefined;
 
-  constructor(body: any, UserModel: any, create: IError) {
+  constructor(body: IRequestBody, UserModel: Model<IUser>, create: IError) {
     this.body = body;
-    this.user = new Object();
     this.User = UserModel;
     this.created = create;
     this.encryptePassword();
@@ -40,13 +43,10 @@ class CreateUser {
     });
   }
 
-  public async saveUser(
-    req: express.Request,
-    res: express.Response
-  ): Promise<void> {
+  public saveUser(req: express.Request, res: express.Response): void {
     const { login } = this.body;
 
-    await this.user.save().then(() => {
+    this.user?.save().then(() => {
       res.json({
         message: this.created.name,
         statusCode: this.created.status,
