@@ -12,8 +12,8 @@ class DeletePhotoController {
   constructor() {
     this.app = express();
     this.accepted = {
-        name: ReasonPhrases.ACCEPTED,
-        status: StatusCodes.ACCEPTED
+      name: ReasonPhrases.ACCEPTED,
+      status: StatusCodes.ACCEPTED,
     };
     this.unAutorize = {
       name: ReasonPhrases.UNAUTHORIZED,
@@ -25,23 +25,22 @@ class DeletePhotoController {
     this.app.get(this.path, this.deletePhoto);
   }
 
-  private async deletePhoto(req: express.Request, res: express.Response): Promise<void> {
+  private deletePhoto(req: express.Request, res: express.Response): void {
     const { id } = req.params;
     const { jwtToken } = req;
 
     if (jwtToken) {
-        await Photo.findByIdAndRemove(id)
-            .then(() => {
-                res.json({
-                    message: this.accepted.name,
-                    statusCode: this.accepted.status
-                });
-            });
-    } else {
+      Photo.findByIdAndRemove(id).then(() => {
         res.json({
-            error: this.unAutorize.name,
-            statusCode: this.unAutorize.status
+          message: this.accepted.name,
+          statusCode: this.accepted.status,
         });
+      });
+    } else {
+      res.json({
+        error: this.unAutorize.name,
+        statusCode: this.unAutorize.status,
+      });
     }
   }
 }

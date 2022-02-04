@@ -2,8 +2,8 @@ import express from "express";
 import axios from "axios";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import IError from "../interfaces/error.interface";
-import User from "../models/users";
 import Photo from "../models/photos";
+import IPhotoDocument from "../interfaces/photoDocument.interface";
 
 class LoadPhotosController {
   private readonly path: string = "/load-photos";
@@ -31,7 +31,7 @@ class LoadPhotosController {
     const { jwtToken } = req;
 
     if (jwtToken) {
-      const photos = await axios.get(
+      const photos: Array<IPhotoDocument> = await axios.get(
         "http://jsonplaceholder.typicode.com/photos"
       );
 

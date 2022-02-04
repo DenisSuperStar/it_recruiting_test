@@ -3,6 +3,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import IView from "../interfaces/view.interface";
 import IError from "../interfaces/error.interface";
 import Photo from "../models/photos";
+import IPhotoDocument from "../interfaces/photoDocument.interface";
 
 class getPhotosController {
   private readonly path: string = "/get-photos/:ownerid/:page/:maxcount";
@@ -31,10 +32,10 @@ class getPhotosController {
     const { jwtToken } = req;
 
     if (jwtToken) {
-      const ownerId = parseInt(ownerid);
-      const currentPage = parseInt(page);
-      const maxCount = parseInt(maxcount);
-      let photos;
+      const ownerId: number = parseInt(ownerid);
+      const currentPage: number = parseInt(page);
+      const maxCount: number = parseInt(maxcount);
+      let photos: Array<IPhotoDocument>;
 
       if (!currentPage || !maxCount) {
         return res.json({
