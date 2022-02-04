@@ -3,8 +3,9 @@ import IUser from "../interfaces/user.interface";
 
 const userSchema = new Schema<IUser>({
   login: {
-    type: String,
-    required: true,
+    type: Schema.Types.String,
+    ref: 'Photo',
+    required: true
   },
   email: {
     type: String,
@@ -14,9 +15,9 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: true,
   },
-  token: {
-    type: String,
-  },
+  registerDate: {
+    type: Date
+  }
 });
 
 const User = model<IUser>("User", userSchema);

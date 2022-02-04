@@ -22,9 +22,7 @@ const photoSchema = new Schema<IPhoto>({
     type: String,
     required: true,
   },
-  owner: {
-    type: String,
-  },
+  owner: [{type: Schema.Types.String, ref: 'User'}]
 });
 
 const Photo = model<IPhoto>("Photo", photoSchema);
