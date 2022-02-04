@@ -33,12 +33,12 @@ class DeleteAlbumIdController {
         const albumId = parseInt(albumid);
         const albums = await Photo.find({ albumId });
 
-        await Photo.deleteMany(albums)
+          Photo.deleteMany(albums)
             .then(() => {
-                res.json({
-                    error: this.accepted.name,
-                    statusCode: this.accepted.status
-                });
+              res.json({
+                error: this.accepted.name,
+                statusCode: this.accepted.status
+              });
             });
     } else {
         res.json({
