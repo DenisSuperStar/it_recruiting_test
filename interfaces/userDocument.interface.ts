@@ -4,7 +4,7 @@ interface IUserDocument extends Document {
   login: string;
   email: string;
   password: string;
-  token: string;
+  registerDate: Date;
 }
 
 export default IUserDocument;
