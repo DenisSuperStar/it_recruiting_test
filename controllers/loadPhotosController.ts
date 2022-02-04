@@ -29,18 +29,22 @@ class LoadPhotosController {
     res: express.Response
   ): Promise<void> {
     const { jwtToken } = req;
+    const { login } = req.cookies;
 
     if (jwtToken) {
       const photos: Array<IPhotoDocument> = await axios.get(
         "http://jsonplaceholder.typicode.com/photos"
       );
+      
+      await Photo.insertMany(photos);
 
-      Photo.insertMany(photos).then(() => {
-        res.json({
-          message: this.ok.name,
-          statusCode: this.ok.status,
+      Photo.updateMany({ owner: login })
+        .then(() => {
+          res.json({
+            error: ReasonPhrases.CREATED,
+            statusCode: StatusCodes.CREATED
+          });
         });
-      });
     } else {
       res.json({
         error: this.unAutorize.name,
