@@ -5,7 +5,7 @@ import IError from "../interfaces/error.interface";
 import Photo from "../models/photos";
 import IPhotoDocument from "../interfaces/photoDocument.interface";
 
-class getPhotosController {
+class GetPhotosController {
   private readonly path: string = "/get-photos/:ownerid/:page/:maxcount";
   private readonly app;
   private readonly photos: IView;
@@ -67,4 +67,4 @@ class getPhotosController {
   }
 }
 
-export default getPhotosController;
+export default GetPhotosController;
