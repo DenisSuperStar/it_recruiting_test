@@ -39,7 +39,7 @@ const notFoundErrorProcess: ServerError = new ServerError(
 );
 const internalErrorProcess: ServerError = new ServerError(
   ReasonPhrases.INTERNAL_SERVER_ERROR,
-  StatusCodes.INTERNAL_SERVER_ERROR
+  StatusCodes .INTERNAL_SERVER_ERROR
 );
 
 const actions: any[] = [];
