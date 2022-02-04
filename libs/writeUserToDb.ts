@@ -9,7 +9,7 @@ import { StatusCodes, ReasonPhrases } from "http-status-codes";
 class WriteUserToDb {
   private readonly verifyUser: VerifyUser;
   private createUser: CreateUser | undefined;
-  private created: IError; 
+  private created: IError;
   private readonly badRequest: IError;
   private readonly conflict: IError;
 
