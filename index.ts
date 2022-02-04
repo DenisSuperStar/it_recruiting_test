@@ -18,12 +18,14 @@ class App {
     this.initViews();
     this.initEngine();
     this.initControllers();
+    // передать функцию auth.ts в контроллер класса
   }
 
   private initMiddleware(): void {
     this.app.use(json());
     this.app.use(urlencoded({ extended: false }));
     this.app.use(cookieParser());
+    // this.app.use() // вызвать функцию auth.ts
   }
 
   private initViews(): void {
