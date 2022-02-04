@@ -9,19 +9,20 @@ const accessTokenVerify = async (
   next: express.NextFunction
 ): Promise<any> => {
   const { login } = req.cookies;
-  const userAutorize = <any>await User.findOne({ login });
-  const { token } = userAutorize;
+  const userAutorize = await User.findOne({ login });
 
-  if (!token) {
+  if (!userAutorize) {
     return res.json({
       error: ReasonPhrases.FORBIDDEN,
       statusCode: StatusCodes.FORBIDDEN,
     });
   }
 
+  const { token } = userAutorize;
   const jwtPayload = verify(token, "secret");
+  req.jwtToken = String(jwtPayload);
 
-  req.jwtToken = jwtPayload;
+  next();
 };
 
 export default accessTokenVerify;
