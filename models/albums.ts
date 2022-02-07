@@ -4,12 +4,11 @@ import IAlbum from "../interfaces/album.interface";
 const albumSchema = new Schema<IAlbum>({
   title: {
     type: String,
-    required: true,
+    required: true
   },
   owner: {
-    type: String,
-    required: true,
-  },
+    type: String
+  }
 });
 
 const Album = model<IAlbum>("Album", albumSchema);
