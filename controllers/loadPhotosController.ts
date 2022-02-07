@@ -1,26 +1,21 @@
 import express from "express";
 import axios from "axios";
-import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import { merge } from "lodash";
 import IError from "../interfaces/error.interface";
 import Photo from "../models/photos";
-import IPhotoDocument from "../interfaces/photoDocument.interface";
+import Album from "../models/albums";
 
 class LoadPhotosController {
   private readonly path: string = "/load-photos";
   private readonly app;
-  private readonly ok: IError;
   private readonly unAutorize: IError;
 
-  constructor() {
+  constructor(unAuth: IError) {
     this.app = express();
-    this.ok = { name: ReasonPhrases.OK, status: StatusCodes.OK };
-    this.unAutorize = {
-      name: ReasonPhrases.UNAUTHORIZED,
-      status: StatusCodes.UNAUTHORIZED,
-    };
+    this.unAutorize = unAuth; // { name: ReasonPhrases.UNAUTHORIZED, status: StatusCodes.UNAUTHORIZED }
   }
 
-  public inittializeRoutes(): void {
+  public initRoutes(): void {
     this.app.get(this.path, this.loadPhotos);
   }
 
@@ -32,19 +27,23 @@ class LoadPhotosController {
     const { login } = req.cookies;
 
     if (jwtToken) {
-      const photos: Array<IPhotoDocument> = await axios.get(
+      const photos: Array<any> = await axios.get(
         "http://jsonplaceholder.typicode.com/photos"
       );
-      
-      await Photo.insertMany(photos);
+      const originAlbums: Array<any> = await axios.get('https://jsonplaceholder.typicode.com/albums');
+      const albums = merge(photos, originAlbums);
 
-      Photo.updateMany({ owner: login })
-        .then(() => {
-          res.json({
-            error: ReasonPhrases.CREATED,
-            statusCode: StatusCodes.CREATED
-          });
-        });
+      albums.forEach(album => {
+        delete album.albumId;
+        delete album.userId;
+        delete album.url;
+        delete album.thumbnailUrl;
+      });
+
+      await Photo.insertMany(photos);
+      await Photo.updateMany({ owner: login });
+      await Album.insertMany(albums);
+      await Album.updateMany({ owner: login });
     } else {
       res.json({
         error: this.unAutorize.name,
