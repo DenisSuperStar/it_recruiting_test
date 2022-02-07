@@ -38,7 +38,7 @@ class App {
 
   private initControllers(): void {
     this.controllers.forEach((controller: any) => {
-      controller.initializeRoutes();
+      controller.initRoutes();
     });
   }
 
