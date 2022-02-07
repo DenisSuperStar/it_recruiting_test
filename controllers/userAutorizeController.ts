@@ -12,10 +12,9 @@ class UserAutorizationController {
     this.app = express();
     this.autorize = view; // { name: 'login', title: 'Войти в приложение.' }
     this.searchUser = seekUser; // const searchUser: SearchUser = new SearchUser();
-    this.initializeRoutes();
   }
 
-  public initializeRoutes(): void {
+  public initRoutes(): void {
     const { name, title } = this.autorize;
     const { findUser } = this.searchUser;
 

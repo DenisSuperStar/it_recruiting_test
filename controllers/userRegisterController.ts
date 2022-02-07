@@ -12,10 +12,9 @@ class UserRegistrationController {
     this.app = express();
     this.register = view; // {name: 'register', title: 'Моментальная регистрация!'}
     this.writeUser = addUser; //const writeUser: WriteUserToDb = new WriteUserToDb();
-    this.initializeRoutes();
   }
 
-  public initializeRoutes(): void {
+  public initRoutes(): void {
     const { name, title } = this.register;
     const { writeUser } = this.writeUser;
 
