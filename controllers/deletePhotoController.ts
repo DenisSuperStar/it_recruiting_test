@@ -1,41 +1,41 @@
 import express from "express";
-import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import UrlStringParser from "../libs/urlStringParser";
 import IError from "../interfaces/error.interface";
 import Photo from "../models/photos";
+import IPhotoDocument from "../interfaces/photoDocument.interface";
 
 class DeletePhotoController {
   private readonly path: string = "/delete-photo/:id";
   private readonly app;
-  private readonly accepted: IError;
+  private paramsParser: UrlStringParser; // const paramsParser: UrlStringParser = new UrlStringParser();
   private readonly unAutorize: IError;
 
-  constructor() {
+  constructor(urlParser: UrlStringParser, unAuth: IError) {
     this.app = express();
-    this.accepted = {
-      name: ReasonPhrases.ACCEPTED,
-      status: StatusCodes.ACCEPTED,
-    };
-    this.unAutorize = {
-      name: ReasonPhrases.UNAUTHORIZED,
-      status: StatusCodes.UNAUTHORIZED,
-    };
+    this.paramsParser = urlParser;
+    this.unAutorize = unAuth; // { name: ReasonPhrases.UNAUTHORIZED, status: StatusCodes.UNAUTHORIZED }
   }
 
-  public initializeRoutes(): void {
+  public initRoutes(): void {
     this.app.get(this.path, this.deletePhoto);
   }
 
-  private deletePhoto(req: express.Request, res: express.Response): void {
-    const { id } = req.params;
+  private async deletePhoto(
+    req: express.Request,
+    res: express.Response
+  ): Promise<void> {
+    const { params } = req;
     const { jwtToken } = req;
 
     if (jwtToken) {
-      Photo.findByIdAndRemove(id).then(() => {
-        res.json({
-          message: this.accepted.name,
-          statusCode: this.accepted.status,
-        });
-      });
+      const { urlParser } = this.paramsParser;
+      const ids: number[] = urlParser(params);
+
+      for (const id of ids) {
+        let photos: Array<IPhotoDocument> = await Photo.find({ id });
+
+        await Photo.deleteMany(photos);
+      }
     } else {
       res.json({
         error: this.unAutorize.name,
