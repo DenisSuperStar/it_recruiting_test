@@ -1,6 +1,6 @@
 interface IAlbum {
-  readonly title: string;
-  readonly owner: string;
+  readonly title: String;
+  readonly owner: String;
 }
 
 export default IAlbum;
