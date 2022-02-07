@@ -1,5 +1,4 @@
 import express from "express";
-import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import IView from "../interfaces/view.interface";
 import IError from "../interfaces/error.interface";
 import Photo from "../models/photos";
@@ -9,18 +8,17 @@ class GetPhotosController {
   private readonly path: string = "/get-photos/:ownerid/:page/:maxcount";
   private readonly app;
   private readonly photos: IView;
+  private readonly badRequest: IError;
   private readonly unAutorize: IError;
 
-  constructor() {
+  constructor(photos: IView, badReq: IError, unAuth: IError) {
     this.app = express();
-    this.photos = { name: "gallery", title: "Фотогалерея." };
-    this.unAutorize = {
-      name: ReasonPhrases.UNAUTHORIZED,
-      status: StatusCodes.UNAUTHORIZED,
-    };
+    this.photos = photos; // { name: 'gallery', title: 'Фотогалерея.' }
+    this.badRequest = badReq; // { name: ReasonPhrases.BadReq, status: StatusCodes.BadReq } 
+    this.unAutorize = unAuth; // { name: ReasonPhrases.UNAUTHORIZED, status: StatusCodes.UNAUTHORIZED }
   }
 
-  public initializeRoutes(): void {
+  public initRoutes(): void {
     this.app.get(this.path, this.getPhotos);
   }
 
@@ -39,8 +37,8 @@ class GetPhotosController {
 
       if (!currentPage || !maxCount) {
         return res.json({
-          error: ReasonPhrases.BAD_REQUEST,
-          statusCode: StatusCodes.BAD_REQUEST,
+          error: this.badRequest.name,
+          statusCode: this.badRequest.status,
         });
       }
 
