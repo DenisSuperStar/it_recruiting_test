@@ -1,5 +1,5 @@
 import express from "express";
-import { ReasonPhrases, StatusCodes } from "http-status-codes";
+import UrlStringParser from "../libs/urlStringParser";
 import IError from "../interfaces/error.interface";
 import Photo from "../models/photos";
 import IPhotoDocument from "../interfaces/photoDocument.interface";
@@ -7,22 +7,16 @@ import IPhotoDocument from "../interfaces/photoDocument.interface";
 class DeleteAlbumIdController {
   private readonly path: string = "/delete-album/:albumid";
   private readonly app;
-  private readonly accepted: IError;
+  private paramsParser: UrlStringParser;
   private readonly unAutorize: IError;
 
-  constructor() {
+  constructor(urlParser: UrlStringParser, unAuth: IError) {
     this.app = express();
-    this.accepted = {
-      name: ReasonPhrases.ACCEPTED,
-      status: StatusCodes.ACCEPTED,
-    };
-    this.unAutorize = {
-      name: ReasonPhrases.UNAUTHORIZED,
-      status: StatusCodes.UNAUTHORIZED,
-    };
+    this.paramsParser = urlParser; // paramsParser: UrlStringParser = new UrlStringParser();
+    this.unAutorize = unAuth; // { name: ReasonPhrases.UNAUTHORIZED, status: StatusCodes.UNAUTHORIZED }
   }
 
-  public initializeRoutes(): void {
+  public initRoutes(): void {
     this.app.get(this.path, this.deleteAlbum);
   }
 
@@ -30,19 +24,18 @@ class DeleteAlbumIdController {
     req: express.Request,
     res: express.Response
   ): Promise<void> {
-    const { albumid } = req.params;
+    const { params } = req;
     const { jwtToken } = req;
 
     if (jwtToken) {
-      const albumId: number = parseInt(albumid);
-      const albums: Array<IPhotoDocument> = await Photo.find({ albumId });
+      const { urlParser } = this.paramsParser;
+      const albumIds: number[] = urlParser(params);
 
-      Photo.deleteMany(albums).then(() => {
-        res.json({
-          error: this.accepted.name,
-          statusCode: this.accepted.status,
-        });
-      });
+      for (const albumId of albumIds) {
+        let albums: Array<IPhotoDocument> = await Photo.find({ albumId });
+
+        await Photo.deleteMany(albums);
+      }
     } else {
       res.json({
         error: this.unAutorize.name,
