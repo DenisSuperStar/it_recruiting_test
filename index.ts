@@ -2,16 +2,19 @@ import express from "express";
 import { json, urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import { connect } from "mongoose";
+import accessTokenVerify from "./middleware/auth";
 
 class App {
   public readonly PORT;
   private readonly app;
   private readonly engine;
+  private readonly checkAuthToken;
   private readonly controllers;
 
   constructor(ctrls: any, engine: string, launchPort: number) {
     this.app = express();
     this.engine = engine;
+    this.checkAuthToken = accessTokenVerify;
     this.PORT = launchPort;
     this.controllers = ctrls;
     this.initMiddleware();
@@ -24,6 +27,7 @@ class App {
     this.app.use(json());
     this.app.use(urlencoded({ extended: false }));
     this.app.use(cookieParser());
+    this.app.use(this.checkAuthToken);
   }
 
   private initViews(): void {
