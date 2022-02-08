@@ -12,6 +12,7 @@ import User from "./models/users";
 import viewList from "./support/views";
 import errorStatus from "./support/servErrors";
 import UrlStringParser from "./libs/urlStringParser";
+import accessTokenVerify from "./middleware/auth";
 
 const PORT: number = 8080;
 const { register, autorize, photos } = viewList;
