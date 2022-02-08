@@ -6,12 +6,23 @@ import LoadPhotosController from "./controllers/loadPhotosController";
 import GetPhotosController from "./controllers/getPhotosController";
 import DeletePhotoController from "./controllers/deletePhotoController";
 import DeleteAlbumIdController from "./controllers/deleteAlbumController";
+import WriteUserToDb from "./libs/writeUserToDb";
+import SearchUser from "./libs/searchUser";
+import User from "./models/users";
+import viewList from "./support/views";
+import errorStatus from "./support/servErrors";
 
 const PORT: number = 8080;
+const { register, autorize } = viewList;
+const { badRequest, unautorized, conflict } = errorStatus;
+
+const writeUser: WriteUserToDb = new WriteUserToDb(badRequest, conflict);
+const searchUser: SearchUser = new SearchUser(unautorized, badRequest, User);
+
 const userRegister: UserRegistrationController =
-  new UserRegistrationController(); // ! передать какие-то классы
+  new UserRegistrationController(register, writeUser);
 const userAutorize: UserAutorizationController =
-  new UserAutorizationController(); // ! передать какие-то классы
+  new UserAutorizationController(autorize, searchUser);
 const loadPhotos: LoadPhotosController = new LoadPhotosController();
 const getPhotos: GetPhotosController = new GetPhotosController();
 const deletePhotos: DeletePhotoController = new DeletePhotoController();
