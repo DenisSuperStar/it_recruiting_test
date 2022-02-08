@@ -41,18 +41,15 @@ class CreateUser {
     });
   }
 
-  public saveUser(
-    req: express.Request,
-    res: express.Response
-  ): void {
+  public saveUser(req: express.Request, res: express.Response): void {
     const { login } = this.body;
     const { generateToken } = this.accessToken;
     const authToken: string = generateToken(login);
-    
+
     this.user.save().then(() => {
       res.json({
         message: this.created.name,
-        statusCode: this.created.status
+        statusCode: this.created.status,
       });
     });
 

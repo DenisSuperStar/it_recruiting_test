@@ -30,10 +30,12 @@ class LoadPhotosController {
       const photos: Array<any> = await axios.get(
         "http://jsonplaceholder.typicode.com/photos"
       );
-      const originAlbums: Array<any> = await axios.get('https://jsonplaceholder.typicode.com/albums');
+      const originAlbums: Array<any> = await axios.get(
+        "https://jsonplaceholder.typicode.com/albums"
+      );
       const albums = merge(photos, originAlbums);
 
-      albums.forEach(album => {
+      albums.forEach((album) => {
         delete album.albumId;
         delete album.userId;
         delete album.url;
