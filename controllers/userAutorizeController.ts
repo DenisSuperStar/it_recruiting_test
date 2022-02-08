@@ -10,8 +10,8 @@ class UserAutorizationController {
 
   constructor(view: IView, seekUser: SearchUser) {
     this.app = express();
-    this.autorize = view; // { name: 'login', title: 'Войти в приложение.' }
-    this.searchUser = seekUser; // const searchUser: SearchUser = new SearchUser();
+    this.autorize = view;
+    this.searchUser = seekUser;
   }
 
   public initRoutes(): void {
