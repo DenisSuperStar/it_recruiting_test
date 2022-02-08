@@ -10,8 +10,8 @@ class UserRegistrationController {
 
   constructor(view: IView, addUser: WriteUserToDb) {
     this.app = express();
-    this.register = view; // {name: 'register', title: 'Моментальная регистрация!'}
-    this.writeUser = addUser; //const writeUser: WriteUserToDb = new WriteUserToDb();
+    this.register = view;
+    this.writeUser = addUser;
   }
 
   public initRoutes(): void {

@@ -2,24 +2,25 @@ import express from "express";
 import VerifyUser from "./verifyUser";
 import ComparePasswords from "./comparePasswords";
 import GenerateAccessToken from "./generateAccessToken";
-import IUserModel from "../interfaces/userModel.interface";
 import IError from "../interfaces/error.interface";
+import IUser from '../interfaces/user.interface';
+import { Model } from "mongoose";
 
 class SearchUser {
   private readonly verifyUser: VerifyUser;
   private readonly comparePassword: ComparePasswords;
   private readonly createToken: GenerateAccessToken;
-  private readonly User: IUserModel;
+  private readonly User: Model<IUser>;
   private readonly badRequest: IError;
   private readonly unAutorize: IError;
 
-  constructor(notAutorize: IError, badReq: IError, UserModel: IUserModel) {
+  constructor(notAutorize: IError, badReq: IError, UserModel: Model<IUser>) {
     this.verifyUser = new VerifyUser();
     this.comparePassword = new ComparePasswords();
     this.createToken = new GenerateAccessToken();
-    this.User = UserModel; // import User from "../models/users";
-    this.badRequest = badReq; // { name: ReasonPhrases.BAD_REQUEST, status: StatusCodes.BAD_REQUEST }
-    this.unAutorize = notAutorize; // { name: ReasonPhrases.UNAUTHORIZED, status: StatusCodes.UNAUTHORIZED }
+    this.User = UserModel;
+    this.badRequest = badReq;
+    this.unAutorize = notAutorize;
   }
 
   public async findUser(
