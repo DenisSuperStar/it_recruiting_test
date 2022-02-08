@@ -13,9 +13,9 @@ class GetPhotosController {
 
   constructor(photos: IView, badReq: IError, unAuth: IError) {
     this.app = express();
-    this.photos = photos; // { name: 'gallery', title: 'Фотогалерея.' }
-    this.badRequest = badReq; // { name: ReasonPhrases.BadReq, status: StatusCodes.BadReq } 
-    this.unAutorize = unAuth; // { name: ReasonPhrases.UNAUTHORIZED, status: StatusCodes.UNAUTHORIZED }
+    this.photos = photos;
+    this.badRequest = badReq;
+    this.unAutorize = unAuth;
   }
 
   public initRoutes(): void {

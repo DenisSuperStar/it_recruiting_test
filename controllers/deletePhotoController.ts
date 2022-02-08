@@ -7,13 +7,13 @@ import IPhotoDocument from "../interfaces/photoDocument.interface";
 class DeletePhotoController {
   private readonly path: string = "/delete-photo/:id";
   private readonly app;
-  private paramsParser: UrlStringParser; // const paramsParser: UrlStringParser = new UrlStringParser();
+  private paramsParser: UrlStringParser;
   private readonly unAutorize: IError;
 
   constructor(urlParser: UrlStringParser, unAuth: IError) {
     this.app = express();
     this.paramsParser = urlParser;
-    this.unAutorize = unAuth; // { name: ReasonPhrases.UNAUTHORIZED, status: StatusCodes.UNAUTHORIZED }
+    this.unAutorize = unAuth;
   }
 
   public initRoutes(): void {

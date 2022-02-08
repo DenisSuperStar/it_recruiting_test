@@ -12,8 +12,8 @@ class DeleteAlbumIdController {
 
   constructor(urlParser: UrlStringParser, unAuth: IError) {
     this.app = express();
-    this.paramsParser = urlParser; // paramsParser: UrlStringParser = new UrlStringParser();
-    this.unAutorize = unAuth; // { name: ReasonPhrases.UNAUTHORIZED, status: StatusCodes.UNAUTHORIZED }
+    this.paramsParser = urlParser;
+    this.unAutorize = unAuth;
   }
 
   public initRoutes(): void {

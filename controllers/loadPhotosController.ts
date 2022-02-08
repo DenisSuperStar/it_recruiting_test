@@ -12,7 +12,7 @@ class LoadPhotosController {
 
   constructor(unAuth: IError) {
     this.app = express();
-    this.unAutorize = unAuth; // { name: ReasonPhrases.UNAUTHORIZED, status: StatusCodes.UNAUTHORIZED }
+    this.unAutorize = unAuth;
   }
 
   public initRoutes(): void {

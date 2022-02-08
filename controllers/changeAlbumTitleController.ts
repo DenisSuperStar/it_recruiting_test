@@ -9,7 +9,7 @@ class ChangeAlbumClassController {
 
     constructor(unAuth: IError) {
         this.app = express();
-        this.unAutorize = unAuth; // { name: ReasonPhrases.UNAUTORIZE, status: StatusCodes.UNAUTORIZE }
+        this.unAutorize = unAuth;
     }
 
     public initRoutes(): void {
