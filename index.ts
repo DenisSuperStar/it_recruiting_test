@@ -18,14 +18,12 @@ class App {
     this.initViews();
     this.initEngine();
     this.initControllers();
-    // передать функцию auth.ts в контроллер класса
   }
 
   private initMiddleware(): void {
     this.app.use(json());
     this.app.use(urlencoded({ extended: false }));
     this.app.use(cookieParser());
-    // this.app.use() // вызвать функцию auth.ts
   }
 
   private initViews(): void {
@@ -51,27 +49,3 @@ class App {
 }
 
 export default App;
-/*
-
-class Setting {
-  
-  private readonly actions: any[];
-
-  constructor(ctrls: any[], actions: any[], launchPort: number) {
-    
-  
-    
-   
-    this.initializeActions();
-  }
-
-  private initializeActions(): void {
-    this.actions.forEach((action) => {
-      let { serverErrorHandling } = action;
-
-      this.app.use(serverErrorHandling);
-    });
-  }
-}
-
-export default Setting;*/
