@@ -8,7 +8,7 @@ import { StatusCodes, ReasonPhrases } from "http-status-codes";
 
 class WriteUserToDb {
   private readonly verifyUser: VerifyUser;
-  private createUser: CreateUser | undefined;
+  private createUser!: CreateUser;
   private created: IError;
   private readonly badRequest: IError;
   private readonly conflict: IError;
