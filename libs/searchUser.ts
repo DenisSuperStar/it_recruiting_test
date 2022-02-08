@@ -3,7 +3,7 @@ import VerifyUser from "./verifyUser";
 import ComparePasswords from "./comparePasswords";
 import GenerateAccessToken from "./generateAccessToken";
 import IError from "../interfaces/error.interface";
-import IUser from '../interfaces/user.interface';
+import IUser from "../interfaces/user.interface";
 import { Model } from "mongoose";
 
 class SearchUser {

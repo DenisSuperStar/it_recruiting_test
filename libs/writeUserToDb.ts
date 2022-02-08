@@ -16,8 +16,8 @@ class WriteUserToDb {
   constructor(badReq: IError, conflict: IError) {
     this.verifyUser = new VerifyUser();
     this.created = { name: ReasonPhrases.CREATED, status: StatusCodes.CREATED };
-    this.badRequest = badReq; // { name: ReasonPhrases.BAD_REQUEST, status: StatusCodes.BAD_REQUEST }
-    this.conflict = conflict; // { name: ReasonPhrases.CONFLICT, status: StatusCodes.CONFLICT }
+    this.badRequest = badReq;
+    this.conflict = conflict;
   }
 
   public async writeUser(

@@ -37,7 +37,7 @@ class CreateUser {
       login,
       email,
       password: this.encryptePassword,
-      registerDate: now 
+      registerDate: now,
     });
   }
 
@@ -45,7 +45,7 @@ class CreateUser {
     const { login } = this.body;
     const { generateToken } = this.accessToken;
     const authToken: string = generateToken(login);
-    
+
     this.user?.save().then(() => {
       res.json({
         message: this.created.name,
