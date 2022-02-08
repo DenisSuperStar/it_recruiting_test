@@ -9,7 +9,7 @@ import IUser from "../interfaces/user.interface";
 
 class CreateUser {
   private readonly body: IRequestBody;
-  private user: IUserDocument | undefined;
+  private user!: IUserDocument;
   private readonly User: Model<IUser>;
   private readonly created: IError;
   public encryptedPassword: string = "";
@@ -41,15 +41,18 @@ class CreateUser {
     });
   }
 
-  public saveUser(req: express.Request, res: express.Response): void {
+  public async saveUser(
+    req: express.Request,
+    res: express.Response
+  ): Promise<void> {
     const { login } = this.body;
     const { generateToken } = this.accessToken;
     const authToken: string = generateToken(login);
 
-    this.user?.save().then(() => {
+    await this.user.save().then(() => {
       res.json({
         message: this.created.name,
-        statusCode: this.created.status,
+        statusCode: this.created.status
       });
     });
 
